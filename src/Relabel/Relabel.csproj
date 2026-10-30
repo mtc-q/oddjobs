@@ -1,8 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <AssemblyName>Relabel</AssemblyName>
-    <RootNamespace>OddJobs.Relabel</RootNamespace>
-    <AssemblyTitle>Relabel - rename hundreds of files in one go</AssemblyTitle>
-    <StartupObject>OddJobs.Relabel.Program</StartupObject>
-  </PropertyGroup>
-</Project>

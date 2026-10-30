@@ -1,8 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <AssemblyName>Twins</AssemblyName>
-    <RootNamespace>OddJobs.Twins</RootNamespace>
-    <AssemblyTitle>Twins - find duplicate files and reclaim the space</AssemblyTitle>
-    <StartupObject>OddJobs.Twins.Program</StartupObject>
-  </PropertyGroup>
-</Project>

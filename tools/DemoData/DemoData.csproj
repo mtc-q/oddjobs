@@ -1,9 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <!-- Generates harmless sample folders used for the website screenshots. Not shipped. -->
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net48</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-</Project>

@@ -1,8 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <AssemblyName>Binder</AssemblyName>
-    <RootNamespace>OddJobs.Binder</RootNamespace>
-    <AssemblyTitle>Binder - turn photos and scans into one PDF</AssemblyTitle>
-    <StartupObject>OddJobs.Binder.Program</StartupObject>
-  </PropertyGroup>
-</Project>

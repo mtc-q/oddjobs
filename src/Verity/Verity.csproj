@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>Verity</AssemblyName>
+    <RootNamespace>OddJobs.Verity</RootNamespace>
+    <AssemblyTitle>Verity - check that a file is exactly what it claims</AssemblyTitle>
+    <StartupObject>OddJobs.Verity.Program</StartupObject>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>Footprint</AssemblyName>
+    <RootNamespace>OddJobs.Footprint</RootNamespace>
+    <AssemblyTitle>Footprint - see what is filling up your disk</AssemblyTitle>
+    <StartupObject>OddJobs.Footprint.Program</StartupObject>
+  </PropertyGroup>
+</Project>

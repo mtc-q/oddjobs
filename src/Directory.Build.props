@@ -1,0 +1,50 @@
+﻿<Project>
+  <!--
+    Every app in src/ is a single, self-contained .exe for .NET Framework 4.8,
+    which ships with Windows 10 (1903+) and Windows 11. Nothing to install.
+    Shared code is compiled into each exe instead of living in a separate DLL,
+    so each download is exactly one file.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <UseWPF>true</UseWPF>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+
+    <Version>1.0.0</Version>
+    <Company>Odd Jobs</Company>
+    <Product>Odd Jobs</Product>
+    <Copyright>Copyright (c) 2026 Odd Jobs contributors. MIT License.</Copyright>
+    <NeutralLanguage>en</NeutralLanguage>
+
+    <ApplicationManifest>$(MSBuildThisFileDirectory)Shared\app.manifest</ApplicationManifest>
+
+    <!-- Reproducible output, and no local file system paths baked into the binaries. -->
+    <Deterministic>true</Deterministic>
+    <PathMap>$(MSBuildThisFileDirectory)=/src/</PathMap>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <!-- "Shots" builds include a hook that renders the window to a PNG for the website. Never shipped. -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Shots'">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Shared\**\*.cs" Link="Shared\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Page Include="$(MSBuildThisFileDirectory)Shared\**\*.xaml" Link="Shared\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

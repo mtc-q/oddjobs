@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>Tidy</AssemblyName>
+    <RootNamespace>OddJobs.Tidy</RootNamespace>
+    <AssemblyTitle>Tidy - sort a messy Downloads folder, with undo</AssemblyTitle>
+    <StartupObject>OddJobs.Tidy.Program</StartupObject>
+  </PropertyGroup>
+</Project>

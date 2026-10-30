@@ -1,0 +1,136 @@
+<ui:OddWindow x:Class="OddJobs.Verity.MainWindow"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:ui="clr-namespace:OddJobs.UI"
+              Title="Verity" Width="1080" Height="760" MinWidth="820" MinHeight="560">
+    <DockPanel>
+        <ui:AppHeader DockPanel.Dock="Top">
+            <Button x:Name="SaveListButton" Style="{StaticResource GhostButton}" ui:Look.Icon="&#xE74E;" Content="Save checksum file…" Click="SaveList_Click" IsEnabled="False"
+                    ToolTip="Write a SHA256SUMS file for these files, so others can check them" />
+        </ui:AppHeader>
+
+        <Border DockPanel.Dock="Bottom" BorderBrush="{DynamicResource Border}" BorderThickness="0,1,0,0" Padding="20,12">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <Button x:Name="ClearButton" Style="{StaticResource GhostButton}" Content="Clear" Click="Clear_Click" Margin="0,0,8,0" />
+                    <Button Style="{StaticResource PrimaryButton}" Content="Add files" ui:Look.Icon="&#xE710;" Click="AddFiles_Click" MinWidth="120" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Ellipse x:Name="StatusDot" Style="{StaticResource StatusDot}" Fill="{DynamicResource TextFaint}" />
+                    <TextBlock x:Name="StatusText" Foreground="{DynamicResource TextMuted}" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <Grid Margin="24,18,24,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Expected value -->
+            <StackPanel>
+                <DockPanel Margin="0,0,0,6">
+                    <TextBlock x:Name="ExpectedKind" DockPanel.Dock="Right" Style="{StaticResource Faint}" />
+                    <TextBlock Style="{StaticResource Label}" Text="Checksum you were given (optional)" Margin="0" />
+                </DockPanel>
+                <TextBox x:Name="ExpectedBox" FontFamily="{StaticResource MonoFont}" MinHeight="38" FontSize="13"
+                         ui:Look.Placeholder="Paste the SHA-256 (or MD5, SHA-1, SHA-512) from the download page" TextChanged="Expected_TextChanged" />
+            </StackPanel>
+
+            <WrapPanel Grid.Row="1" Margin="0,14,0,10">
+                <TextBlock Text="Calculate" Foreground="{DynamicResource TextMuted}" VerticalAlignment="Center" Margin="0,0,10,0" />
+                <ToggleButton x:Name="AlgMD5" Style="{StaticResource Chip}" Content="MD5" Tag="MD5" Click="Algorithm_Click" />
+                <ToggleButton x:Name="AlgSHA1" Style="{StaticResource Chip}" Content="SHA-1" Tag="SHA-1" Click="Algorithm_Click" />
+                <ToggleButton x:Name="AlgSHA256" Style="{StaticResource Chip}" Content="SHA-256" Tag="SHA-256" IsChecked="True" Click="Algorithm_Click" />
+                <ToggleButton x:Name="AlgSHA384" Style="{StaticResource Chip}" Content="SHA-384" Tag="SHA-384" Click="Algorithm_Click" />
+                <ToggleButton x:Name="AlgSHA512" Style="{StaticResource Chip}" Content="SHA-512" Tag="SHA-512" Click="Algorithm_Click" />
+            </WrapPanel>
+
+            <ScrollViewer x:Name="Scroller" Grid.Row="2" VerticalScrollBarVisibility="Auto" Focusable="False" Margin="0,4,0,0">
+                <StackPanel Margin="0,0,0,20">
+                    <Border x:Name="Summary" CornerRadius="8" Padding="16,12" Margin="0,0,0,12" Visibility="Collapsed">
+                        <DockPanel>
+                            <TextBlock x:Name="SummaryGlyph" Style="{StaticResource Glyph}" FontSize="20" Margin="0,0,14,0" />
+                            <StackPanel>
+                                <TextBlock x:Name="SummaryTitle" FontWeight="SemiBold" FontSize="14" />
+                                <TextBlock x:Name="SummaryBody" TextWrapping="Wrap" Margin="0,2,0,0" Opacity="0.85" />
+                            </StackPanel>
+                        </DockPanel>
+                    </Border>
+
+                    <ItemsControl x:Name="Files">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource Card}" Margin="0,0,0,10" Padding="16,12">
+                                    <StackPanel>
+                                        <DockPanel>
+                                            <Border x:Name="Pill" DockPanel.Dock="Right" Style="{StaticResource Pill}" Visibility="{Binding HasVerdict, Converter={x:Static ui:VisibleWhen.Instance}}">
+                                                <TextBlock x:Name="PillText" Text="{Binding VerdictText}" FontSize="12" FontWeight="SemiBold" />
+                                            </Border>
+                                            <Button DockPanel.Dock="Right" Style="{StaticResource SmallIconButton}" ui:Look.Icon="&#xE711;" FontSize="10" Margin="0,0,8,0"
+                                                    ToolTip="Remove from list" Click="Remove_Click" Tag="{Binding}" />
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path}" />
+                                                <TextBlock Text="{Binding Detail}" Style="{StaticResource Faint}" TextTrimming="CharacterEllipsis" Margin="0,2,0,0" />
+                                            </StackPanel>
+                                        </DockPanel>
+                                        <ProgressBar Margin="0,10,0,2" Maximum="1" Value="{Binding Progress}" Visibility="{Binding Busy, Converter={x:Static ui:VisibleWhen.Instance}}" />
+                                        <ItemsControl ItemsSource="{Binding Lines}" Margin="0,8,0,0">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Margin="0,2,0,0">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="72" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Text="{Binding Algorithm}" Style="{StaticResource Faint}" VerticalAlignment="Center" />
+                                                        <TextBox x:Name="V" Grid.Column="1" Text="{Binding Value, Mode=OneWay}" IsReadOnly="True" BorderThickness="0" Background="Transparent"
+                                                                 FontFamily="{StaticResource MonoFont}" FontSize="12" Padding="0" MinHeight="24" TextWrapping="Wrap" />
+                                                        <Button Grid.Column="2" Style="{StaticResource SmallIconButton}" ui:Look.Icon="&#xE8C8;" FontSize="11"
+                                                                ToolTip="Copy" Click="CopyHash_Click" Tag="{Binding Value}" />
+                                                    </Grid>
+                                                    <DataTemplate.Triggers>
+                                                        <DataTrigger Binding="{Binding IsMatch}" Value="True">
+                                                            <Setter TargetName="V" Property="Foreground" Value="{DynamicResource Success}" />
+                                                            <Setter TargetName="V" Property="FontWeight" Value="SemiBold" />
+                                                        </DataTrigger>
+                                                    </DataTemplate.Triggers>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </Border>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Verdict}" Value="Match">
+                                        <Setter TargetName="Pill" Property="Background" Value="{DynamicResource SuccessSoft}" />
+                                        <Setter TargetName="PillText" Property="Foreground" Value="{DynamicResource Success}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Verdict}" Value="Mismatch">
+                                        <Setter TargetName="Pill" Property="Background" Value="{DynamicResource DangerSoft}" />
+                                        <Setter TargetName="PillText" Property="Foreground" Value="{DynamicResource Danger}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Verdict}" Value="Missing">
+                                        <Setter TargetName="Pill" Property="Background" Value="{DynamicResource WarningSoft}" />
+                                        <Setter TargetName="PillText" Property="Foreground" Value="{DynamicResource Warning}" />
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <ContentControl x:Name="EmptyState" Style="{StaticResource DropZone}" MinHeight="320">
+                        <StackPanel HorizontalAlignment="Center" MaxWidth="500">
+                            <ui:GlyphTile Width="44" Height="44" HorizontalAlignment="Center" />
+                            <TextBlock Text="Drop a file to check it" Style="{StaticResource H2}" HorizontalAlignment="Center" Margin="0,16,0,0" />
+                            <TextBlock Style="{StaticResource Muted}" TextAlignment="Center" Margin="0,6,0,0" LineHeight="19"
+                                       Text="Many download pages publish a checksum, a fingerprint of the file. If the fingerprint of your copy matches it, the file is exactly what they released: not damaged and not swapped for something else. You can also drop a SHA256SUMS file to check everything it lists." />
+                        </StackPanel>
+                    </ContentControl>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </DockPanel>
+</ui:OddWindow>

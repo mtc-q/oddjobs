@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Tests compile each app's engine source directly (no UI), so they exercise exactly the code that ships.
+    Run with:  dotnet run -c Release (from tests/OddJobs.Tests)
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\src\Shared\IO\*.cs" Link="Shared\IO\%(Filename)%(Extension)" />
+    <Compile Include="..\..\src\Shared\UI\Thumbnails.cs" Link="Shared\UI\Thumbnails.cs" />
+    <Compile Include="..\..\src\Relabel\RenameEngine.cs" Link="Apps\RenameEngine.cs" />
+    <Compile Include="..\..\src\Relabel\PhotoDate.cs" Link="Apps\PhotoDate.cs" />
+    <Compile Include="..\..\src\Twins\DuplicateScanner.cs" Link="Apps\DuplicateScanner.cs" />
+    <Compile Include="..\..\src\Footprint\DiskScanner.cs" Link="Apps\DiskScanner.cs" />
+    <Compile Include="..\..\src\Scrub\PhotoCleaner.cs" Link="Apps\PhotoCleaner.cs" />
+    <Compile Include="..\..\src\Tidy\TidyPlanner.cs" Link="Apps\TidyPlanner.cs" />
+    <Compile Include="..\..\src\Untangle\Steps.cs" Link="Apps\Steps.cs" />
+    <Compile Include="..\..\src\Verity\Checksums.cs" Link="Apps\Checksums.cs" />
+    <Compile Include="..\..\src\Binder\PdfWriter.cs" Link="Apps\PdfWriter.cs" />
+    <Compile Include="..\..\src\Binder\PageMaker.cs" Link="Apps\PageMaker.cs" />
+    <Compile Include="..\..\src\Lockbox\LockboxFormat.cs" Link="Apps\LockboxFormat.cs" />
+    <Compile Include="..\..\src\Lockbox\Secret.cs" Link="Apps\Secret.cs" />
+    <Compile Include="..\..\src\Parity\FolderComparer.cs" Link="Apps\FolderComparer.cs" />
+  </ItemGroup>
+</Project>

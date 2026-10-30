@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>Untangle</AssemblyName>
+    <RootNamespace>OddJobs.Untangle</RootNamespace>
+    <AssemblyTitle>Untangle - clean up messy text in one pass</AssemblyTitle>
+    <StartupObject>OddJobs.Untangle.Program</StartupObject>
+  </PropertyGroup>
+</Project>

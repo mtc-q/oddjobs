@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>Scrub</AssemblyName>
+    <RootNamespace>OddJobs.Scrub</RootNamespace>
+    <AssemblyTitle>Scrub - strip location and hidden data from photos</AssemblyTitle>
+    <StartupObject>OddJobs.Scrub.Program</StartupObject>
+  </PropertyGroup>
+</Project>

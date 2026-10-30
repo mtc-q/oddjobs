@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>Parity</AssemblyName>
+    <RootNamespace>OddJobs.Parity</RootNamespace>
+    <AssemblyTitle>Parity - compare two folders and copy what's missing</AssemblyTitle>
+    <StartupObject>OddJobs.Parity.Program</StartupObject>
+  </PropertyGroup>
+</Project>

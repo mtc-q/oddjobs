@@ -1,0 +1,9 @@
+﻿<Project>
+  <!-- AssemblyName is only known here (after the project body), and it is stable for WPF's temporary build projects. -->
+  <PropertyGroup>
+    <ApplicationIcon>$(MSBuildThisFileDirectory)Shared\Icons\$(AssemblyName).ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Shots'">
+    <DefineConstants>$(DefineConstants);SCREENSHOT</DefineConstants>
+  </PropertyGroup>
+</Project>

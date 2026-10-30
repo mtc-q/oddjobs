@@ -1,0 +1,129 @@
+<ui:OddWindow x:Class="OddJobs.Tidy.MainWindow"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:ui="clr-namespace:OddJobs.UI"
+              xmlns:local="clr-namespace:OddJobs.Tidy"
+              Title="Tidy" Width="1160" Height="760" MinWidth="900" MinHeight="560">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type local:GroupRow}">
+            <DockPanel Margin="2,14,2,4">
+                <TextBlock DockPanel.Dock="Right" Text="{Binding Detail}" Foreground="{DynamicResource TextMuted}" FontSize="12" VerticalAlignment="Center" />
+                <TextBlock Text="&#xE8B7;" Style="{StaticResource Glyph}" Foreground="{DynamicResource Accent}" Margin="0,0,10,0" />
+                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" VerticalAlignment="Center" />
+            </DockPanel>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type local:FileRow}">
+            <DockPanel Margin="24,0,0,0">
+                <TextBlock DockPanel.Dock="Right" Text="{Binding Detail}" Foreground="{DynamicResource TextFaint}" FontSize="12" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" Margin="0,0,16,0" />
+            </DockPanel>
+        </DataTemplate>
+        <Style x:Key="RowContainer" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+            <Setter Property="Padding" Value="10,5" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsHeader}" Value="True">
+                    <Setter Property="IsHitTestVisible" Value="False" />
+                    <Setter Property="Focusable" Value="False" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="KindCheck" TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+            <Setter Property="Width" Value="138" />
+            <Setter Property="Margin" Value="0,0,0,10" />
+        </Style>
+    </Window.Resources>
+
+    <DockPanel>
+        <ui:AppHeader DockPanel.Dock="Top">
+            <Button x:Name="UndoButton" Style="{StaticResource GhostButton}" ui:Look.Icon="&#xE7A7;" Content="Undo last tidy" Click="Undo_Click" />
+        </ui:AppHeader>
+
+        <Border DockPanel.Dock="Bottom" BorderBrush="{DynamicResource Border}" BorderThickness="0,1,0,0" Padding="20,12">
+            <DockPanel>
+                <Button x:Name="TidyButton" DockPanel.Dock="Right" Style="{StaticResource PrimaryButton}" MinWidth="150" Content="Tidy" Click="Tidy_Click" IsEnabled="False" />
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Ellipse x:Name="StatusDot" Style="{StaticResource StatusDot}" Fill="{DynamicResource TextFaint}" />
+                    <TextBlock x:Name="StatusText" Foreground="{DynamicResource TextMuted}" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="340" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border BorderBrush="{DynamicResource Border}" BorderThickness="0,0,1,0">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False">
+                    <StackPanel Margin="20,18,20,24">
+                        <TextBlock Style="{StaticResource Label}" Text="Folder to tidy" />
+                        <Border Style="{StaticResource Card}" Padding="12,10">
+                            <DockPanel>
+                                <Button DockPanel.Dock="Right" Content="Change" Click="ChangeFolder_Click" VerticalAlignment="Center" />
+                                <StackPanel VerticalAlignment="Center" Margin="0,0,10,0">
+                                    <TextBlock x:Name="FolderName" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock x:Name="FolderPath" Style="{StaticResource Faint}" TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+
+                        <TextBlock Style="{StaticResource Label}" Text="Sort into folders by" Margin="0,20,0,6" />
+                        <Border Style="{StaticResource SegmentBar}">
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton x:Name="ByType" Style="{StaticResource Segment}" GroupName="g" Content="Type" IsChecked="True" />
+                                <RadioButton x:Name="ByTypeMonth" Style="{StaticResource Segment}" GroupName="g" Content="Type, then month" />
+                                <RadioButton x:Name="ByMonth" Style="{StaticResource Segment}" GroupName="g" Content="Month" />
+                            </StackPanel>
+                        </Border>
+
+                        <TextBlock Style="{StaticResource Label}" Text="Leave recent files where they are" Margin="0,20,0,6" />
+                        <ComboBox x:Name="RecentBox" SelectedIndex="1">
+                            <ComboBoxItem Content="No, tidy everything" Tag="0" />
+                            <ComboBoxItem Content="Anything from the last day" Tag="1" />
+                            <ComboBoxItem Content="Anything from the last 3 days" Tag="3" />
+                            <ComboBoxItem Content="Anything from the last week" Tag="7" />
+                            <ComboBoxItem Content="Anything from the last month" Tag="30" />
+                        </ComboBox>
+
+                        <TextBlock Style="{StaticResource Label}" Text="Kinds of files to move" Margin="0,20,0,10" />
+                        <WrapPanel x:Name="KindPanel">
+                            <CheckBox Style="{StaticResource KindCheck}" Content="Images" Tag="Photo" IsChecked="True" />
+                            <CheckBox Style="{StaticResource KindCheck}" Content="Documents" Tag="Document" IsChecked="True" />
+                            <CheckBox Style="{StaticResource KindCheck}" Content="Videos" Tag="Video" IsChecked="True" />
+                            <CheckBox Style="{StaticResource KindCheck}" Content="Music" Tag="Audio" IsChecked="True" />
+                            <CheckBox Style="{StaticResource KindCheck}" Content="Archives" Tag="Archive" IsChecked="True" />
+                            <CheckBox Style="{StaticResource KindCheck}" Content="Installers" Tag="Installer" IsChecked="True" />
+                            <CheckBox Style="{StaticResource KindCheck}" Content="Code" Tag="Code" IsChecked="True" />
+                            <CheckBox Style="{StaticResource KindCheck}" Content="Fonts" Tag="Font" IsChecked="True" />
+                            <CheckBox Style="{StaticResource KindCheck}" Content="Disk images" Tag="DiskImage" IsChecked="True" />
+                            <CheckBox Style="{StaticResource KindCheck}" Content="Everything else" Tag="Other" IsChecked="True" />
+                        </WrapPanel>
+
+                        <TextBlock Style="{StaticResource Faint}" TextWrapping="Wrap" LineHeight="17" Margin="0,14,0,0"
+                                   Text="Only loose files are moved, never folders. Hidden files and downloads still in progress are left alone. Every tidy is recorded, so it can be undone later." />
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <StackPanel Margin="20,16,20,6">
+                    <TextBlock x:Name="SummaryText" Style="{StaticResource H2}" />
+                    <TextBlock x:Name="SummaryDetail" Style="{StaticResource Muted}" FontSize="12" Margin="0,2,0,0" />
+                </StackPanel>
+                <ListBox x:Name="Preview" Grid.Row="1" Margin="10,0,10,0" ItemContainerStyle="{StaticResource RowContainer}" VirtualizingPanel.ScrollUnit="Pixel"
+                         MouseDoubleClick="Preview_DoubleClick" />
+                <StackPanel x:Name="EmptyState" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="380" Margin="0,0,0,60">
+                    <ui:GlyphTile Width="44" Height="44" HorizontalAlignment="Center" />
+                    <TextBlock x:Name="EmptyTitle" Style="{StaticResource H2}" HorizontalAlignment="Center" Margin="0,16,0,0" Text="Nothing to tidy" />
+                    <TextBlock x:Name="EmptyBody" Style="{StaticResource Muted}" TextAlignment="Center" Margin="0,6,0,0" LineHeight="19"
+                               Text="There are no loose files here that match these settings." />
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </DockPanel>
+</ui:OddWindow>
